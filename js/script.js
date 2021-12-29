@@ -9,9 +9,6 @@ const colorElement = document.getElementById('color');
 //references the design DOM element
 const designElement = document.getElementById('design');
 
-
-    
-
 //assigns the name input focus state
 nameField.focus();
 
@@ -26,7 +23,7 @@ jobRoleDropdown.addEventListener('change', (e) => {
         otherJobRoleField.setAttribute('type', 'hidden')
     }
 });
-
+/////////////////////////////////////////////////////////////////////////////
 //hides the color element upon page load
 colorElement.disabled = true;
 
@@ -34,14 +31,41 @@ colorElement.disabled = true;
 designElement.addEventListener('change', (e) => {
     colorElement.disabled = false;
 //for loop that iterates through the color options and hides or shows them based on user selection
-    for(let i = 1; i < colorElement.length; i++) {
+    for(let i = 0; i < colorElement.length; i++) {
         const eventTarget = e.target.value;
         const optionTheme = colorElement[i].getAttribute('data-theme');
         
         if( eventTarget === optionTheme) {
             colorElement[i].hidden = false;
+            colorElement[i].selected = true;
         } else {
             colorElement[i].hidden = true;
+            colorElement[i].selected = false;
         };
     };   
 });
+//////////////////////////////////////////////////////////////////////////////////
+//reference to the activities element
+const activitiesElement = document.getElementById('activities');
+//reference to the p element
+const pElement = document.getElementById('activities-cost');
+//variable to store the total cost
+var totalCost = 0;
+
+//activities element event handler
+activitiesElement.addEventListener('change', (e) => {
+    const activityCost = e.target.getAttribute('data-cost');
+    const convActivityCost = +activityCost
+//if statement updates the total cost in the p element if an activity is checked or unchecked
+    if(e.target.checked) {
+        totalCost += convActivityCost
+        console.log(totalCost)
+        pElement.innerHTML = `Total: $${totalCost}`
+    } else {
+        totalCost -= convActivityCost
+        console.log(totalCost)
+    }   pElement.innerHTML = `Total: $${totalCost}` 
+});
+//////////////////////////////////////////////////////////////////////////////////
+const paymentSelect  = document.getElementById('payment')
+console.log(paymentSelect)
