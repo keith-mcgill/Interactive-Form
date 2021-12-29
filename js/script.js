@@ -67,5 +67,36 @@ activitiesElement.addEventListener('change', (e) => {
     }   pElement.innerHTML = `Total: $${totalCost}` 
 });
 //////////////////////////////////////////////////////////////////////////////////
-const paymentSelect  = document.getElementById('payment')
-console.log(paymentSelect)
+//references the payment select and displays 'credit card' by default
+const paymentSelect  = document.getElementById('payment');
+paymentSelect.children[1].setAttribute('selected', 'true');
+
+//references the credit card div
+const creditCard = document.getElementById('credit-card')
+
+//references the paypal div and hides it by default
+const paypal = document.getElementById('paypal');
+paypal.hidden = true;
+
+//references the bitcoin div and hides it by default
+const bitcoin = document.getElementById('bitcoin');
+bitcoin.hidden = true;
+
+paymentSelect.addEventListener('change', (e) => {
+    console.log(e.target.value)
+    if(e.target.value === 'paypal' ) {
+        paypal.hidden = false;
+        bitcoin.hidden = true;
+        creditCard.hidden = true;
+    } else if(e.target.value === 'bitcoin'){
+        paypal.hidden = true;
+        bitcoin.hidden = false;
+        creditCard.hidden = true;
+    } else {
+        paypal.hidden = true;
+        bitcoin.hidden = true;
+        creditCard.hidden = false;
+    }
+
+    
+});
