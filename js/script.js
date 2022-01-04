@@ -16,10 +16,10 @@ nameField.focus();
 
 //////////////////////JOB ROLE SECTION/////////////////////////////////////////////////////////////
 
-//hides the "other job role" field upon page load
+//hides the "other job role" text field upon page load
 otherJobRoleField.setAttribute('type', 'hidden');
 
-//Hides or displays the "other job role" field based on user selection
+//Hides or displays the "other job role" text field based on user selection
 jobRoleDropdown.addEventListener('change', (e) => {
     if(e.target.value === 'other'){
         otherJobRoleField.setAttribute('type', 'text')
@@ -32,7 +32,7 @@ jobRoleDropdown.addEventListener('change', (e) => {
 //hides the color element upon page load
 colorElement.disabled = true;
 
-//design element event listener
+//design element event listener that enables and updates the color field based on user selections
 designElement.addEventListener('change', (e) => {
     colorElement.disabled = false;
 //for loop that iterates through the color options and hides or shows them based on user selection
@@ -53,8 +53,6 @@ designElement.addEventListener('change', (e) => {
 
 //reference to the activities element
 const activitiesElement = document.getElementById('activities');
-
-
 //reference to the p element
 const pElement = document.getElementById('activities-cost');
 //variable to store the total cost
@@ -88,7 +86,7 @@ paypal.hidden = true;
 //references the bitcoin div and hides it by default
 const bitcoin = document.getElementById('bitcoin');
 bitcoin.hidden = true;
-
+//event handler that updates the payment section options based on user changes
 paymentSelect.addEventListener('change', (e) => {
     
     if(e.target.value === 'paypal' ) {
@@ -112,20 +110,19 @@ const form = document.querySelector('form');
 //reference to the email field
 const emailField = document.getElementById('email');
 
-
 //function that verifies the name field is not blank
 const nameValidator = () => {
     const nameFieldValue = nameField.value;
     return /\w+/i.test(nameFieldValue)
 };
 
-//function that validates the email field
+//function that validates the email field has correctly formatted email address
 const emailValidator = () => {
     const emailFieldValue = emailField.value;
     return /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailFieldValue);  
 };
 
-//function that verifies that an activity has been selected
+//function that verifies that at least one activity has been selected
 const activityValidator = () => {
     const activityBoxes = document.querySelectorAll('input[type=checkbox]')
     var checked = 0;
@@ -136,7 +133,7 @@ const activityValidator = () => {
     };
     return checked
 };
-//function that verifies that the credit card number, zip code, & CVV field values are acceptable.
+//function that verifies that the credit card number, zip code, & CVV field values are entered and formatted correctly.
 const creditCardValidator = () => {
     const cardNumber = document.getElementById('cc-num');
     const zipCode = document.getElementById('zip');
@@ -145,13 +142,13 @@ const creditCardValidator = () => {
     const zipCodeRegex = /^\d{5}$/;
     const cvvRegex = /^\d{3}$/;
     var cardInfoValid;
-
+    //checks that the entered values are formatted correctly
     if(cardRegex.test(cardNumber.value) && zipCodeRegex.test(zipCode.value) && cvvRegex.test(cvv.value)) {
         cardInfoValid = true;   
     } else {
         cardInfoValid = false;
     };
-
+    //validates that the credit card fields are not empty and adds/removes validation error warnings based on validity
     if(!cardRegex.test(cardNumber.value)) {
         cardNumber.parentElement.classList.add('not-valid');
         cardNumber.parentElement.classList.remove('valid');
