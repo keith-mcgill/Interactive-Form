@@ -90,7 +90,7 @@ const bitcoin = document.getElementById('bitcoin');
 bitcoin.hidden = true;
 
 paymentSelect.addEventListener('change', (e) => {
-    console.log(e.target.value)
+    
     if(e.target.value === 'paypal' ) {
         paypal.hidden = false;
         bitcoin.hidden = true;
@@ -152,32 +152,92 @@ const creditCardValidator = () => {
         cardInfoValid = false;
     };
 
+    if(!cardRegex.test(cardNumber.value)) {
+        cardNumber.parentElement.classList.add('not-valid');
+        cardNumber.parentElement.classList.remove('valid');
+        cardNumber.parentElement.lastElementChild.style.display = 'block';    
+    } else {
+        cardNumber.parentElement.classList.add('valid');
+        cardNumber.parentElement.classList.remove('not-valid');
+        cardNumber.parentElement.lastElementChild.style.display = 'none';
+    }
+    if(!zipCodeRegex.test(zipCode.value)) {
+        zipCode.parentElement.classList.add('not-valid');
+        zipCode.parentElement.classList.remove('valid');
+        zipCode.parentElement.lastElementChild.style.display = 'block';
+    } else {
+        zipCode.parentElement.classList.add('valid');
+        zipCode.parentElement.classList.remove('not-valid');
+        zipCode.parentElement.lastElementChild.style.display = 'none';
+    }
+    if(!cvvRegex.test(cvv.value)) {
+        cvv.parentElement.classList.add('not-valid');
+        cvv.parentElement.classList.remove('valid');
+        cvv.parentElement.lastElementChild.style.display = 'block';
+    } else {
+        cvv.parentElement.classList.add('valid');
+        cvv.parentElement.classList.remove('not-valid');
+        cvv.parentElement.lastElementChild.style.display = 'none';
+    }
     return cardInfoValid;
 };
     
 
-//form validator event handler
+//form validator event handler that prevents form from submitting if any validation or accessibility requirements are not met.
 form.addEventListener('submit', (e) => {
     
     if(!nameValidator()) {
         e.preventDefault();
-        alert('name field cannot be blank');
-    } 
+        nameField.parentElement.classList.add('not-valid');
+        nameField.parentElement.classList.remove('valid');
+        nameField.parentElement.lastElementChild.style.display = 'block';
+    } else {
+        nameField.parentElement.classList.add('valid');
+        nameField.parentElement.classList.remove('not-valid');
+        nameField.parentElement.lastElementChild.style.display = 'none';
+    }
 
     if(!emailValidator()) {
         e.preventDefault();
-        alert('email must be formatted properly("name@email.com")')
-    } 
-    
+        emailField.parentElement.classList.add('not-valid');
+        emailField.parentElement.classList.remove('valid');
+        emailField.parentElement.lastElementChild.style.display = 'block';
+    } else {
+        emailField.parentElement.classList.add('valid');
+        emailField.parentElement.classList.remove('not-valid');
+        emailField.parentElement.lastElementChild.style.display = 'none'
+    }
     if(activityValidator() <= 0) {
         e.preventDefault();
-        alert('You must select at least one activity')
-    }
-   
+        activitiesElement.classList.add('not-valid')
+        activitiesElement.classList.remove('valid');
+        activitiesElement.lastElementChild.style.display = 'block';
+    }  else {
+        activitiesElement.classList.add('valid');
+        activitiesElement.classList.remove('not-valid');
+        activitiesElement.lastElementChild.style.display = 'none';
+    }    
     if(paymentSelect.value === 'credit-card'){
         if(!creditCardValidator()) {
             e.preventDefault();
-            alert('The credit card information you have intered is invalid, please check again')
+            
         }
     }
 });
+
+/////////////////ACCESSIBILITY SECTION/////////////////////////////////////////////////////////////////////////
+
+//reference to the activity checkboxes
+const activityCheckboxes = document.querySelectorAll('input[type=checkbox]');
+
+//for loop to add or remove the focus class from the checkboxes' parent element
+for( let i = 0; i < activityCheckboxes.length; i++) {
+    activityCheckboxes[i].addEventListener('focus', (e) => {
+        e.target.parentNode.classList.add('focus')
+    });
+
+    activityCheckboxes[i].addEventListener('blur', (e) => {
+        e.target.parentNode.classList.remove('focus')
+    });
+};
+
