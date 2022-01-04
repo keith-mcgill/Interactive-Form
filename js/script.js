@@ -9,13 +9,17 @@ const colorElement = document.getElementById('color');
 //references the design DOM element
 const designElement = document.getElementById('design');
 
+//////////////////NAME FIELD/////////////////////////////////////////////////////////////////////////
+
 //assigns the name input focus state
 nameField.focus();
 
-//hides the other job role field upon page load
+//////////////////////JOB ROLE SECTION/////////////////////////////////////////////////////////////
+
+//hides the "other job role" field upon page load
 otherJobRoleField.setAttribute('type', 'hidden');
 
-//Hides or displays the other job role field based on user selection
+//Hides or displays the "other job role" field based on user selection
 jobRoleDropdown.addEventListener('change', (e) => {
     if(e.target.value === 'other'){
         otherJobRoleField.setAttribute('type', 'text')
@@ -23,7 +27,8 @@ jobRoleDropdown.addEventListener('change', (e) => {
         otherJobRoleField.setAttribute('type', 'hidden')
     }
 });
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////T-SHIRT INFO SECTION/////////////////////////////////////////////////////
+
 //hides the color element upon page load
 colorElement.disabled = true;
 
@@ -44,9 +49,12 @@ designElement.addEventListener('change', (e) => {
         };
     };   
 });
-//////////////////////////////////////////////////////////////////////////////////
+////////////////////REGISTER FOR ACTIVITIES SECTION//////////////////////////////////////////////////////////////
+
 //reference to the activities element
 const activitiesElement = document.getElementById('activities');
+
+
 //reference to the p element
 const pElement = document.getElementById('activities-cost');
 //variable to store the total cost
@@ -59,14 +67,13 @@ activitiesElement.addEventListener('change', (e) => {
 //if statement updates the total cost in the p element if an activity is checked or unchecked
     if(e.target.checked) {
         totalCost += convActivityCost
-        console.log(totalCost)
         pElement.innerHTML = `Total: $${totalCost}`
     } else {
         totalCost -= convActivityCost
-        console.log(totalCost)
     }   pElement.innerHTML = `Total: $${totalCost}` 
 });
-//////////////////////////////////////////////////////////////////////////////////
+///////////////////////////PAYMENT INFO SECTION///////////////////////////////////////////////////////
+
 //references the payment select and displays 'credit card' by default
 const paymentSelect  = document.getElementById('payment');
 paymentSelect.children[1].setAttribute('selected', 'true');
@@ -97,6 +104,80 @@ paymentSelect.addEventListener('change', (e) => {
         bitcoin.hidden = true;
         creditCard.hidden = false;
     }
+});
+///////////////////////////FORM VALIDATION SECTION///////////////////////////////////////////////////////
 
+//reference to the form element
+const form = document.querySelector('form');
+//reference to the email field
+const emailField = document.getElementById('email');
+
+
+//function that verifies the name field is not blank
+const nameValidator = () => {
+    const nameFieldValue = nameField.value;
+    return /\w+/i.test(nameFieldValue)
+};
+
+//function that validates the email field
+const emailValidator = () => {
+    const emailFieldValue = emailField.value;
+    return /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailFieldValue);  
+};
+
+//function that verifies that an activity has been selected
+const activityValidator = () => {
+    const activityBoxes = document.querySelectorAll('input[type=checkbox]')
+    var checked = 0;
+    for( let i = 0; i < activityBoxes.length; i++) {
+        if(activityBoxes[i].checked) {
+            checked += 1;
+        }   
+    };
+    return checked
+};
+//function that verifies that the credit card number, zip code, & CVV field values are acceptable.
+const creditCardValidator = () => {
+    const cardNumber = document.getElementById('cc-num');
+    const zipCode = document.getElementById('zip');
+    const cvv = document.getElementById('cvv');
+    const cardRegex = /^\d{13,16}$/;
+    const zipCodeRegex = /^\d{5}$/;
+    const cvvRegex = /^\d{3}$/;
+    var cardInfoValid;
+
+    if(cardRegex.test(cardNumber.value) && zipCodeRegex.test(zipCode.value) && cvvRegex.test(cvv.value)) {
+        cardInfoValid = true;   
+    } else {
+        cardInfoValid = false;
+    };
+
+    return cardInfoValid;
+};
     
+
+//form validator event handler
+form.addEventListener('submit', (e) => {
+    
+    if(!nameValidator()) {
+        e.preventDefault();
+        alert('name field cannot be blank');
+    } 
+
+    if(!emailValidator()) {
+        e.preventDefault();
+        alert('email must be formatted properly("name@email.com")')
+    } 
+    
+    if(activityValidator() <= 0) {
+        e.preventDefault();
+        alert('You must select at least one activity')
+    }
+   
+    if(paymentSelect.value === 'credit-card'){
+        if(!creditCardValidator()) {
+            e.preventDefault();
+            alert('The credit card information you have intered is invalid, please check again')
+        }
+    }
 });
